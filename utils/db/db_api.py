@@ -57,7 +57,7 @@ class DatabaseAPI():
         document = {
             'id': from_user_id,
             'username': from_user_username,
-            'name', name,
+            'name': name,
             'gender': from_gender,
             'action': action
         }

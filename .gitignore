@@ -1,6 +1,0 @@
-.venv/
-test
-*.env
-try
-.gitignore
-__pycache__/
