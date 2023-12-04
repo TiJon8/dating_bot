@@ -1,23 +1,27 @@
 # импортируем executor для обращения на сервера Телеграм
-from loader import dp
-from aiogram import executor
+from loader import dp, bot
+import asyncio
 
 # import middlewares, filters, handlers -> именно в таком порядке импорты обработчиков
+from middlewares.middlewares import (
+    CustomSimpleMiddleware,
+    )
 import handlers
-from utils.notify_startup import on_startup_notify
-from utils.set_bot_commands import set_default_commands
-from utils.db.db_api import db_API
 
 
+async def on_startup():
+    print('бот стартавал')
 
-async def on_startup(dp):
-
-    await set_default_commands(dp)
-    db_API.check_table()
-
-    await on_startup_notify(dp)
-
+# главная функция запуска поллинга и инициализации дополнительных параметров
+async def main():
+    dp.message.middleware.register(CustomSimpleMiddleware())
+    
+    dp.startup.register(on_startup)
+    await dp.start_polling(bot)
 
 # запуск поллинга
 if __name__ == '__main__':
-    executor.start_polling(dp, skip_updates=True, on_startup=on_startup, allowed_updates=['message', 'chat_member'])
+    try:
+        asyncio.run(main())
+    except KeyboardInterrupt:
+        print('До свидания')
